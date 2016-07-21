@@ -19,8 +19,7 @@ public class MenuIcon extends MenuItem {
         super(stack);
     }
 
-    public MenuIcon(Material material)
-    {
+    public MenuIcon(Material material) {
         super(material);
     }
 

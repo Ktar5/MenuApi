@@ -24,7 +24,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class MenuListener implements Listener {
 
-    static{
+    static {
         Bukkit.getServer().getPluginManager().registerEvents(new MenuListener(), JavaPlugin.getProvidingPlugin(MenuListener.class));
     }
 
@@ -34,11 +34,12 @@ public class MenuListener implements Listener {
             MenuHolder holder = ((MenuHolder) event.getInventory().getHolder());
             @NonNull Menu menu = holder.getMenu();
             menu.call(event);
-            if (menu.parent() != null) {
+
+            if (menu.hasParent()) {
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        menu.parent().show(((Player) event.getPlayer()));
+                        menu.getParent(((Player) event.getPlayer())).show((Player) event.getPlayer());
                     }
                 }.runTaskLater(JavaPlugin.getProvidingPlugin(this.getClass()), 2L);
             }
@@ -69,7 +70,7 @@ public class MenuListener implements Listener {
     public void onDrag(InventoryDragEvent event) {
         if (event.getInventory().getHolder() instanceof MenuHolder) {
             event.setCancelled(true);
-            MenuHolder holder = ((MenuHolder)event.getInventory().getHolder());
+            MenuHolder holder = ((MenuHolder) event.getInventory().getHolder());
             @NonNull Menu menu = holder.getMenu();
             menu.call(event);
         }
@@ -81,6 +82,5 @@ public class MenuListener implements Listener {
             event.setCancelled(true);
         }
     }
-
 
 }

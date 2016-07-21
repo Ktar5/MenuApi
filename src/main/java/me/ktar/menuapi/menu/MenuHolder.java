@@ -12,12 +12,12 @@ import lombok.Getter;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
-public final class MenuHolder<T extends Menu<T>> implements InventoryHolder{
+public final class MenuHolder<T extends Menu<T>> implements InventoryHolder {
 
     @Getter
     private final T menu;
 
-    MenuHolder(T menu){
+    MenuHolder(T menu) {
         this.menu = menu;
     }
 

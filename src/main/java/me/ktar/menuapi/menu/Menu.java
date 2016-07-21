@@ -8,6 +8,7 @@ package me.ktar.menuapi.menu;
  * permission of the aforementioned owner.
  */
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -26,11 +27,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 
 @Getter
 @Setter
 @Accessors(fluent = true, chain = true)
-public abstract class Menu<T extends Menu<T>>{
+public abstract class Menu<T extends Menu<T>> {
 
     /**
      * The name of the menu displayed as the title
@@ -50,12 +52,14 @@ public abstract class Menu<T extends Menu<T>>{
     private final Map<Integer, MenuItem> items;
 
     /**
-     * The menu that serves as the parentt
+     * The menu that serves as the parent
      * Aka this menu is opened when the current menu is closed
      */
-    protected Menu parent;
+    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
+    protected Function<Player, Menu> parent;
 
-    private final Set<MenuListener> listeners;
+    private final Set<MenuEvent> listeners;
 
     protected Menu(String name, Size size) {
         this.items = new HashMap<>();
@@ -71,6 +75,19 @@ public abstract class Menu<T extends Menu<T>>{
         FOUR,
         FIVE,
         SIX,
+    }
+
+    public boolean hasParent() {
+        return parent != null;
+    }
+
+    public T setParent(Function<Player, Menu> function) {
+        this.parent = function;
+        return getThis();
+    }
+
+    public Menu getParent(Player player) {
+        return parent.apply(player);
     }
 
     /**
@@ -106,7 +123,6 @@ public abstract class Menu<T extends Menu<T>>{
         } else {
             inventory.setItem(index, item.stack());
         }
-
         items.put(index, item);
         return getThis();
     }
@@ -115,9 +131,9 @@ public abstract class Menu<T extends Menu<T>>{
         return (y * 9) + x;
     }
 
-    public boolean use(int slot, Player player, ClickType type){
+    public boolean use(int slot, Player player, ClickType type) {
         MenuItem item = items.get(slot);
-        if(item == null){
+        if (item == null) {
             return true;
         }
         return item.checkAct(player, type);
@@ -134,29 +150,25 @@ public abstract class Menu<T extends Menu<T>>{
         return setItem(toIndex(x, y), item);
     }
 
-    public boolean call(Event event)
-    {
-        for(MenuListener listener : listeners)
-        {
-            if(event instanceof InventoryClickEvent)
-            {
-                return listener.onMenuClick(this, (InventoryClickEvent)event);
-            }
-            else if(event instanceof InventoryDragEvent)
-            {
-                listener.onMenuDrag(this, (InventoryDragEvent)event);
-            }
-            else if(event instanceof InventoryCloseEvent)
-            {
-                listener.onMenuClose(this, (InventoryCloseEvent)event);
+    public boolean call(Event event) {
+        for (MenuEvent listener : listeners) {
+            if (event instanceof InventoryClickEvent) {
+                return listener.onMenuClick(this, (InventoryClickEvent) event);
+            } else if (event instanceof InventoryDragEvent) {
+                listener.onMenuDrag(this, (InventoryDragEvent) event);
+            } else if (event instanceof InventoryCloseEvent) {
+                listener.onMenuClose(this, (InventoryCloseEvent) event);
             }
         }
-
         return false;
     }
 
-    public void addListener(MenuListener listener)
-    {
+    /**
+     * Adds a listener to this menu.
+     *
+     * @param listener
+     */
+    public void addListener(MenuEvent listener) {
         listeners.add(listener);
     }
 
@@ -170,15 +182,15 @@ public abstract class Menu<T extends Menu<T>>{
 
     public abstract T getThis();
 
-    public class MenuListener
-    {
-        public boolean onMenuClick(Menu menu, InventoryClickEvent event)
-        {
+    public class MenuEvent {
+        public boolean onMenuClick(Menu menu, InventoryClickEvent event) {
             return true;
         }
 
-        public void onMenuDrag(Menu menu, InventoryDragEvent event){}
+        public void onMenuDrag(Menu menu, InventoryDragEvent event) {
+        }
 
-        public void onMenuClose(Menu menu, InventoryCloseEvent event){}
+        public void onMenuClose(Menu menu, InventoryCloseEvent event) {
+        }
     }
 }

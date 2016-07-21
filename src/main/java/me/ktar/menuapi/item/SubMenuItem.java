@@ -8,22 +8,31 @@ package me.ktar.menuapi.item;
  * permission of the aforementioned owner.
  */
 
+import me.ktar.menuapi.menu.Menu;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
-public class SubMenuItem extends MenuItem {
+public abstract class SubMenuItem extends MenuItem {
 
-    private final String server;
-
-    protected SubMenuItem(ItemStack stack, String server) {
+    protected SubMenuItem(ItemStack stack) {
         super(stack);
-        this.server = server;
     }
 
-    //TODO
+    public abstract Menu getMenu(Player player, ClickType clickType);
+
     @Override
     public void act(Player player, ClickType clickType) {
-
+        if (player.getOpenInventory() != null) {
+            player.closeInventory();
+        }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                getMenu(player, clickType).show(player);
+            }
+        }.runTaskLater(JavaPlugin.getProvidingPlugin(this.getClass()), 2L);
     }
 }

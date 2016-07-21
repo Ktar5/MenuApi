@@ -1,9 +1,9 @@
 package me.ktar.menuapi.item;
 /*
  * Copyright (C) 2013-Current Carter Gale (Ktar5) <buildfresh@gmail.com>
- * 
+ *
  * This file is part of MenuApi.
- * 
+ *
  * MenuApi can not be copied and/or distributed without the express
  * permission of the aforementioned owner.
  */
@@ -19,6 +19,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.function.BiConsumer;
+import java.util.function.BiPredicate;
+
 public abstract class
 MenuItem {
     @Getter
@@ -30,19 +33,8 @@ MenuItem {
         this.stack = stack;
     }
 
-    protected MenuItem(Material material)
-    {
+    protected MenuItem(Material material) {
         this(new ItemStack(material));
-    }
-
-    @FunctionalInterface
-    public interface BiFunction<One, Two> {
-        public void apply(One one, Two two);
-    }
-
-    @FunctionalInterface
-    public interface TriFunction<One, Two, Three> {
-        public Three apply(One one, Two two);
     }
 
     public static void test() throws InterruptedException {
@@ -65,25 +57,25 @@ MenuItem {
         menu.modify(Bukkit.getPlayer("Ktar5")).change(0, 1, item -> item.setDisplayName("I have been changed"));
     }
 
-    public static MenuItem create(ItemStack item, BiFunction<Player, ClickType> onclick) {
+    public static MenuItem create(ItemStack item, BiConsumer<Player, ClickType> onclick) {
         return new MenuItem(item) {
             @Override
             public void act(Player player, ClickType clickType) {
-                onclick.apply(player, clickType);
+                onclick.accept(player, clickType);
             }
         };
     }
 
-    public static MenuItem create(ItemStack item, BiFunction<Player, ClickType> onclick, TriFunction<Player, ClickType, Boolean> canUse) {
+    public static MenuItem create(ItemStack item, BiConsumer<Player, ClickType> onclick, BiPredicate<Player, ClickType> canUse) {
         return new MenuItem(item) {
             @Override
             public boolean canUse(Player player, ClickType clickType) {
-                return canUse.apply(player, clickType);
+                return canUse.test(player, clickType);
             }
 
             @Override
             public void act(Player player, ClickType clickType) {
-                onclick.apply(player, clickType);
+                onclick.accept(player, clickType);
             }
         };
     }

@@ -35,8 +35,7 @@ public class DynamicMenu extends Menu<DynamicMenu> {
         return new InventoryRefresher(player, this);
     }
 
-    public InventoryRefresher modify()
-    {
+    public InventoryRefresher modify() {
         return modify(null);
     }
 
@@ -47,8 +46,7 @@ public class DynamicMenu extends Menu<DynamicMenu> {
             this.player = player;
         }
 
-        public InventoryRefresher change(int index, Function<ItemFactory, ItemFactory> function)
-        {
+        public InventoryRefresher change(int index, Function<ItemFactory, ItemFactory> function) {
             if (index < inventory.getSize()) {
                 ItemStack item = function.apply(new ItemFactory(inventory.getItem(index))).getItemStack();
                 items().get(index).stack(item);
