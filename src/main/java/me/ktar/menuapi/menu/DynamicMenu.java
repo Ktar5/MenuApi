@@ -21,6 +21,10 @@ public class DynamicMenu extends Menu<DynamicMenu> {
         super(name, size);
     }
 
+    public DynamicMenu(String name, int size) {
+        super(name, size);
+    }
+
     @Override
     public void show(Player player) {
         player.openInventory(inventory);

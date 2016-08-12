@@ -62,9 +62,13 @@ public abstract class Menu<T extends Menu<T>> {
     private final Set<MenuEvent> listeners;
 
     protected Menu(String name, Size size) {
+        this(name, (size.ordinal() + 1) * 9);
+    }
+
+    protected Menu(String name, int size){
         this.items = new HashMap<>();
         this.name = ChatColor.translateAlternateColorCodes('&', name);
-        this.inventory = Bukkit.createInventory(new MenuHolder<>(getThis()), (size.ordinal() + 1) * 9, this.name);
+        this.inventory = Bukkit.createInventory(new MenuHolder<>(getThis()), size, this.name);
         this.listeners = new HashSet<>();
     }
 
