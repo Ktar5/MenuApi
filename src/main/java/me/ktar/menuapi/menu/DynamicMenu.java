@@ -9,6 +9,7 @@ package me.ktar.menuapi.menu;
  */
 
 import me.ktar.menuapi.ItemFactory;
+import me.ktar.menuapi.item.MenuItem;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -79,6 +80,15 @@ public class DynamicMenu extends Menu<DynamicMenu> {
             if (index < inventory.getSize()) {
                 items().get(index).stack(stack);
                 inventory.setItem(index, stack);
+            }
+            return this;
+        }
+
+        public InventoryRefresher set(int x, int y, MenuItem item) {
+            int index = toIndex(x, y);
+            if (index < inventory.getSize()) {
+                setItem(index, item);
+                inventory.setItem(index, item.stack());
             }
             return this;
         }
