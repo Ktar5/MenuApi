@@ -132,6 +132,7 @@ public abstract class Menu<T extends Menu<T>> {
     }
 
     public static int toIndex(int x, int y) {
+        y-=1; x-=1;
         return (y * 9) + x;
     }
 
