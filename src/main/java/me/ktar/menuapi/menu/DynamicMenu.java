@@ -74,6 +74,15 @@ public class DynamicMenu extends Menu<DynamicMenu> {
             return this;
         }
 
+        public InventoryRefresher set(int x, int y, ItemStack stack) {
+            int index = toIndex(x, y);
+            if (index < inventory.getSize()) {
+                items().get(index).stack(stack);
+                inventory.setItem(index, stack);
+            }
+            return this;
+        }
+
     }
 
 }
