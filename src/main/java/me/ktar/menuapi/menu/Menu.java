@@ -62,13 +62,16 @@ public abstract class Menu<T extends Menu<T>> {
     private final Set<MenuEvent> listeners;
 
     protected Menu(String name, Size size) {
-        this(name, (size.ordinal() + 1) * 9);
+        this.items = new HashMap<>();
+        this.name = ChatColor.translateAlternateColorCodes('&', name);
+        this.inventory = Bukkit.createInventory(new MenuHolder<>(getThis()), (size.ordinal() + 1) * 9, this.name);
+        this.listeners = new HashSet<>();
     }
 
     protected Menu(String name, int size){
         this.items = new HashMap<>();
         this.name = ChatColor.translateAlternateColorCodes('&', name);
-        this.inventory = Bukkit.createInventory(new MenuHolder<>(getThis()), size, this.name);
+        this.inventory = Bukkit.createInventory(new MenuHolder<>(getThis()), size * 9, this.name);
         this.listeners = new HashSet<>();
     }
 
@@ -156,13 +159,16 @@ public abstract class Menu<T extends Menu<T>> {
     }
 
     public boolean call(Event event) {
+        if(listeners.isEmpty()){
+            return true;
+        }
         for (MenuEvent listener : listeners) {
             if (event instanceof InventoryClickEvent) {
                 return listener.onMenuClick(this, (InventoryClickEvent) event);
             } else if (event instanceof InventoryDragEvent) {
-                listener.onMenuDrag(this, (InventoryDragEvent) event);
+                return listener.onMenuDrag(this, (InventoryDragEvent) event);
             } else if (event instanceof InventoryCloseEvent) {
-                listener.onMenuClose(this, (InventoryCloseEvent) event);
+                return listener.onMenuClose(this, (InventoryCloseEvent) event);
             }
         }
         return false;
@@ -192,10 +198,12 @@ public abstract class Menu<T extends Menu<T>> {
             return true;
         }
 
-        public void onMenuDrag(Menu menu, InventoryDragEvent event) {
+        public boolean onMenuDrag(Menu menu, InventoryDragEvent event) {
+            return true;
         }
 
-        public void onMenuClose(Menu menu, InventoryCloseEvent event) {
+        public boolean onMenuClose(Menu menu, InventoryCloseEvent event) {
+            return true;
         }
     }
 }

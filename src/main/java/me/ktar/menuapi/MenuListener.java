@@ -11,7 +11,6 @@ package me.ktar.menuapi;
 import lombok.NonNull;
 import me.ktar.menuapi.menu.Menu;
 import me.ktar.menuapi.menu.MenuHolder;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -23,10 +22,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 public class MenuListener implements Listener {
-
-    static {
-        Bukkit.getServer().getPluginManager().registerEvents(new MenuListener(), JavaPlugin.getProvidingPlugin(MenuListener.class));
-    }
 
     @EventHandler
     public void onExit(InventoryCloseEvent event) {
@@ -57,11 +52,11 @@ public class MenuListener implements Listener {
                 event.setCancelled(cancel);
                 return;
             }
-            event.setCancelled(true);
             if (!menu.items().containsKey(event.getSlot())) {
                 event.setCancelled(cancel);
                 return;
             }
+            event.setCancelled(true);
             menu.use(event.getSlot(), ((Player) event.getWhoClicked()), event.getClick());
         }
     }
