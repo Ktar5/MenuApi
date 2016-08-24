@@ -193,7 +193,7 @@ public abstract class Menu<T extends Menu<T>> {
 
     public abstract T getThis();
 
-    public class MenuEvent {
+    public static class MenuEvent {
         public boolean onMenuClick(Menu menu, InventoryClickEvent event) {
             return true;
         }
