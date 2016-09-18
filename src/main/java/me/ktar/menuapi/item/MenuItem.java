@@ -54,7 +54,7 @@ MenuItem {
                 });
         menu.show(Bukkit.getPlayer("Ktar5"));
         Thread.sleep(2000);
-        menu.modify(Bukkit.getPlayer("Ktar5")).change(0, 1, item -> item.setDisplayName("I have been changed"));
+        menu.modify().change(0, 1, item -> item.setDisplayName("I have been changed"));
     }
 
     public static MenuItem create(ItemStack item, BiConsumer<Player, ClickType> onclick) {
