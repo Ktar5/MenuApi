@@ -30,27 +30,24 @@ import java.util.Set;
 import java.util.function.Function;
 
 @Getter
-@Setter
 @Accessors(fluent = true, chain = true)
 public abstract class Menu<T extends Menu<T>> {
-
-    /**
-     * The name of the menu displayed as the title
-     * on the inventory, when opened
-     */
-    protected String name;
 
     /**
      * The inventory that will be shown to the player
      */
     protected final Inventory inventory;
-
     /**
      * The MenuItems and their corresponding slot numbers (Starting at 0)
      * Note: empty slots in an inventory are not in the map
      */
     private final Map<Integer, MenuItem> items;
-
+    private final Set<MenuEvent> listeners;
+    /**
+     * The name of the menu displayed as the title
+     * on the inventory, when opened
+     */
+    protected String name;
     /**
      * The menu that serves as the parent
      * Aka this menu is opened when the current menu is closed
@@ -59,8 +56,6 @@ public abstract class Menu<T extends Menu<T>> {
     @Setter(AccessLevel.NONE)
     protected Function<Player, Menu> parent;
 
-    private final Set<MenuEvent> listeners;
-
     protected Menu(String name, Size size) {
         this.items = new HashMap<>();
         this.name = ChatColor.translateAlternateColorCodes('&', name);
@@ -68,20 +63,22 @@ public abstract class Menu<T extends Menu<T>> {
         this.listeners = new HashSet<>();
     }
 
-    protected Menu(String name, int size){
+    protected Menu(String name, int size) {
         this.items = new HashMap<>();
         this.name = ChatColor.translateAlternateColorCodes('&', name);
         this.inventory = Bukkit.createInventory(new MenuHolder<>(getThis()), size * 9, this.name);
         this.listeners = new HashSet<>();
     }
 
-    public enum Size {
-        ONE,
-        TWO,
-        THREE,
-        FOUR,
-        FIVE,
-        SIX,
+    public T setName(String name){
+        this.name = ChatColor.translateAlternateColorCodes('&', name);
+        return getThis();
+    }
+
+    public static int toIndex(int x, int y) {
+        y -= 1;
+        x -= 1;
+        return (y * 9) + x;
     }
 
     public boolean hasParent() {
@@ -134,11 +131,6 @@ public abstract class Menu<T extends Menu<T>> {
         return getThis();
     }
 
-    public static int toIndex(int x, int y) {
-        y-=1; x-=1;
-        return (y * 9) + x;
-    }
-
     public boolean use(int slot, Player player, ClickType type) {
         MenuItem item = items.get(slot);
         if (item == null) {
@@ -159,7 +151,7 @@ public abstract class Menu<T extends Menu<T>> {
     }
 
     public boolean call(Event event) {
-        if(listeners.isEmpty()){
+        if (listeners.isEmpty()) {
             return true;
         }
         for (MenuEvent listener : listeners) {
@@ -192,6 +184,15 @@ public abstract class Menu<T extends Menu<T>> {
     public abstract void show(Player player);
 
     public abstract T getThis();
+
+    public enum Size {
+        ONE,
+        TWO,
+        THREE,
+        FOUR,
+        FIVE,
+        SIX,
+    }
 
     public static class MenuEvent {
         public boolean onMenuClick(Menu menu, InventoryClickEvent event) {

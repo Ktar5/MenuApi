@@ -14,6 +14,7 @@ public class StaticMenu extends Menu<StaticMenu> {
     public StaticMenu(String name, Size size) {
         super(name, size);
     }
+
     public StaticMenu(String name, int size) {
         super(name, size);
     }

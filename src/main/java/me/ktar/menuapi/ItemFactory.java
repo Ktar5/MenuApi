@@ -20,41 +20,39 @@ import java.util.Map;
  * permission of the aforementioned owner.
  */
 
-public class ItemFactory
-{
+public class ItemFactory {
     private ItemStack itemStack;
 
-    public ItemFactory(Material mat){
+    public ItemFactory(Material mat) {
         itemStack = new ItemStack(mat);
     }
 
-    public ItemFactory(ItemStack stack){
+    public ItemFactory(ItemStack stack) {
         itemStack = stack;
     }
 
-    public ItemMeta getMeta(){
+    public ItemMeta getMeta() {
         return itemStack.getItemMeta();
     }
 
-    public ItemFactory setMeta(ItemMeta meta){
+    public ItemFactory setMeta(ItemMeta meta) {
         itemStack.setItemMeta(meta);
         return this;
     }
 
-    public ItemFactory setLore(String... lore)
-    {
+    public ItemFactory setLore(String... lore) {
         return setLore(Arrays.asList(lore));
     }
 
-    public ItemFactory setLore(List<String> lore){
-        if(lore == null) return this;
+    public ItemFactory setLore(List<String> lore) {
+        if (lore == null) return this;
         ItemMeta meta = getMeta();
         meta.setLore(StringUtil.colorList(lore));
         itemStack.setItemMeta(meta);
         return this;
     }
 
-    public ItemFactory setLore(String lore){
+    public ItemFactory setLore(String lore) {
         ItemMeta meta = getMeta();
         List<String> lores = new ArrayList<>();
 
@@ -64,13 +62,11 @@ public class ItemFactory
         return this;
     }
 
-    public ItemFactory addLore(String lore)
-    {
+    public ItemFactory addLore(String lore) {
         ItemMeta meta = getMeta();
         List<String> lores = meta.getLore();
 
-        if(lores == null)
-        {
+        if (lores == null) {
             lores = new ArrayList<>();
         }
 
@@ -80,9 +76,12 @@ public class ItemFactory
         return this;
     }
 
-    public ItemFactory setDisplayName(String displayName){
-        if(displayName == null)
-        {
+    public String getDisplayName() {
+        return getMeta().getDisplayName();
+    }
+
+    public ItemFactory setDisplayName(String displayName) {
+        if (displayName == null) {
             return this;
         }
 
@@ -92,21 +91,17 @@ public class ItemFactory
         return this;
     }
 
-    public String getDisplayName(){
-        return getMeta().getDisplayName();
-    }
-
-    public ItemFactory setAmount(int amount){
+    public ItemFactory setAmount(int amount) {
         itemStack.setAmount(amount);
         return this;
     }
 
-    public ItemFactory setMaterial(Material mat){
+    public ItemFactory setMaterial(Material mat) {
         itemStack.setType(mat);
         return this;
     }
 
-    public ItemFactory setMaterial(int materialId){
+    public ItemFactory setMaterial(int materialId) {
         itemStack.setType(Material.getMaterial(materialId));
         return this;
     }
@@ -115,8 +110,8 @@ public class ItemFactory
      * Sets the glow that you get when you enchant an item without enchanting
      * an item
      */
-    public ItemFactory addGlow(boolean boo){
-        if(!boo) return this;
+    public ItemFactory addGlow(boolean boo) {
+        if (!boo) return this;
         this.addEnchantment(Enchantment.OXYGEN, 1);
         ItemMeta meta = itemStack.getItemMeta();
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -130,9 +125,8 @@ public class ItemFactory
      *
      * @param enchantments The enchantment mapped to the integer level of the enchantment
      */
-    public ItemFactory setEnchantments(Map<Enchantment, Integer> enchantments){
-        if(enchantments == null)
-        {
+    public ItemFactory setEnchantments(Map<Enchantment, Integer> enchantments) {
+        if (enchantments == null) {
             return this;
         }
 
@@ -144,9 +138,9 @@ public class ItemFactory
      * Adds an unsafe enchantment to the itemstack
      *
      * @param enchant The enchantment to apply
-     * @param level The level of the enchantment
+     * @param level   The level of the enchantment
      */
-    public ItemFactory addEnchantment(Enchantment enchant, Integer level){
+    public ItemFactory addEnchantment(Enchantment enchant, Integer level) {
         itemStack.addUnsafeEnchantment(enchant, level);
         return this;
     }
@@ -156,7 +150,7 @@ public class ItemFactory
      * Uses some random spigot method to set unbreakability of the itemstack
      * Note: Hasn't been tested yet, deprecated until testing occurs
      */
-    public ItemFactory setUnbreakable(){
+    public ItemFactory setUnbreakable() {
         ItemMeta meta = getMeta();
         meta.spigot().setUnbreakable(true);
         itemStack.setItemMeta(meta);
@@ -169,7 +163,7 @@ public class ItemFactory
      *
      * @param durability the durability, with upper bound of 32767
      */
-    public ItemFactory setDurability(int durability){
+    public ItemFactory setDurability(int durability) {
         itemStack.setDurability((short) (durability > 32767 ? 32767 : durability));
         return this;
     }
@@ -177,7 +171,7 @@ public class ItemFactory
     /**
      * @return the amount of players that own minecraft, casted to an item stack
      */
-    public ItemStack getItemStack(){
+    public ItemStack getItemStack() {
         return itemStack;
     }
 

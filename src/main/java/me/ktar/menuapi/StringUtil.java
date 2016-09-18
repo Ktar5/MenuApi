@@ -13,8 +13,7 @@ import org.bukkit.ChatColor;
 
 import java.util.List;
 
-public class StringUtil
-{
+public class StringUtil {
     /**
      * Quickly color a string
      */
@@ -47,10 +46,8 @@ public class StringUtil
         return inputs;
     }
 
-    public static String[] colorArray(String[] inputs, ChatColor color)
-    {
-        for(int i = 0; i < inputs.length; i++)
-        {
+    public static String[] colorArray(String[] inputs, ChatColor color) {
+        for (int i = 0; i < inputs.length; i++) {
             inputs[i] = color + inputs[i];
         }
 

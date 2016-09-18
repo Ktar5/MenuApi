@@ -36,20 +36,16 @@ public class DynamicMenu extends Menu<DynamicMenu> {
         return this;
     }
 
+    @Deprecated
     public InventoryRefresher modify(Player player) {
-        return new InventoryRefresher(player, this);
+        return modify();
     }
 
     public InventoryRefresher modify() {
-        return modify(null);
+        return new InventoryRefresher();
     }
 
     public class InventoryRefresher {
-        private final Player player;
-
-        InventoryRefresher(Player player, DynamicMenu menu) {
-            this.player = player;
-        }
 
         public InventoryRefresher change(int index, Function<ItemFactory, ItemFactory> function) {
             if (index < inventory.getSize()) {
